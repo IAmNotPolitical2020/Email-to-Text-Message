@@ -2,12 +2,16 @@ from flask import Flask
 from flask_mail import Mail
 from flask_mail import Message
 
+#Setting up the flask mail service
+
 MAIL_SERVER = 'mail.customwebsite.com'
 MAIL_PORT = 465
 MAIL_USE_TLS = False
 MAIL_USE_SSL = True
 MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
 MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+
+#Cell carriers list to append to the end of a phone number
 
 carriers = {
 	'att':    '@mms.att.net',
@@ -23,6 +27,8 @@ carriers = {
     'republicwireless':   '@text.republicwireless.com',
 }
 
+#Which adress the email gets sent from
+
 senderadress = {
 	'notifications':    'notifications@customwebsite.com',
 	'accounts': 'accounts@customwebsite.com',
@@ -30,6 +36,8 @@ senderadress = {
 	'bugreport': 'bugreport@customwebsite.com',
     'information': 'information@customwebsite.com',
 }
+
+#Sends the message to the phone number
 
 def send(message, phonenumber, carrier, fromadress):
    to_number = str(phonenumber) + str(carriers[carrier])
