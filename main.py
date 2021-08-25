@@ -1,15 +1,5 @@
-from flask import Flask
-from flask_mail import Mail
-from flask_mail import Message
-
-#Setting up the flask mail service
-
-MAIL_SERVER = 'mail.customwebsite.com'
-MAIL_PORT = 465
-MAIL_USE_TLS = False
-MAIL_USE_SSL = True
-MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
-MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
+import os
+import smtplib
 
 #Cell carriers list to append to the end of a phone number
 
@@ -27,9 +17,9 @@ carriers = {
     'republicwireless':   '@text.republicwireless.com',
 }
 
-#Which adress the email gets sent from
+#Which address the email gets sent from
 
-senderadress = {
+senderaddress = {
 	'notifications':    'notifications@customwebsite.com',
 	'accounts': 'accounts@customwebsite.com',
     'support':    'support@customwebsite.com',
@@ -39,9 +29,13 @@ senderadress = {
 
 #Sends the message to the phone number
 
-def send(message, phonenumber, carrier, fromadress):
-   to_number = str(phonenumber) + str(carriers[carrier])
-   fromadress = senderadress[fromadress]
-   msg = Message('', sender = str(fromadress), recipients = [to_number])
-   msg.body = message
-   mail.send(msg)
+def send(message, phonenumber, carrier, fromaddress):
+    to_number = str(phonenumber) + str(carriers[carrier])
+    fromaddress = senderaddress[fromaddress]
+    try:
+        smtpObj = smtplib.SMTP('localhost')
+        smtpObj.sendmail(str(fromaddress), str(to_number), str(message))         
+        print("Successfully sent email")
+    except SMTPException:
+        print("Error: unable to send email")
+
